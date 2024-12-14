@@ -1,0 +1,40 @@
+?start: statement+
+
+?statement: assignment
+          | function_def
+          | function_call
+          | condition
+          | loop
+          | print_statement
+          | "return" expression
+
+assignment: IDENTIFIER "=" expression
+
+function_def: "def" IDENTIFIER "(" [IDENTIFIER ("," IDENTIFIER)*] ")" "{" statement+ "}"
+
+function_call: IDENTIFIER "(" [expression ("," expression)*] ")"
+
+condition: "if" "(" expression ")" "{" statement+ "}" ["else" "{" statement+ "}"]
+
+loop: "while" "(" expression ")" "{" statement+ "}"
+
+print_statement: "print" "(" expression ")"
+
+?expression: term
+           | expression "+" term   -> add
+           | expression "-" term   -> sub
+
+?term: factor
+     | term "*" factor             -> mul
+     | term "/" factor             -> div
+
+?factor: NUMBER
+       | STRING
+       | IDENTIFIER
+       | "(" expression ")"
+
+%import common.CNAME -> IDENTIFIER
+%import common.NUMBER
+%import common.ESCAPED_STRING -> STRING
+%import common.WS
+%ignore WS
